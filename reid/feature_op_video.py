@@ -14,41 +14,42 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
     :param image_path: loader为None时需要的图片地址
     :return: 返回特征或特征列表
     """
-    cuda_is_available = torch.cuda.is_available
-    model.eval()
+    with torch.no_grad():
+        cuda_is_available = torch.cuda.is_available
+        model.eval()
 
-    features = torch.Tensor()
-    count = 0
-    feature_length = 0
-    pids, cams = [], []
-    for data in loader:
-        imgs, pid, cam = data
-        imgs = imgs[0]
+        features = torch.Tensor()
+        count = 0
+        feature_length = 0
+        pids, cams = [], []
+        for data in loader:
+            imgs, pid, cam = data
+            imgs = imgs[0]
 
-        n, c, h, w = imgs.size()
-        if count == 0:
-            feature_length = model(imgs.cuda() if cuda_is_available else imgs).size()[1]
-        ff = torch.Tensor(n, feature_length).zero_()
-        for i in range(2):
-            if i == 1:
-                imgs = flip_img(imgs.cpu())
-            outputs = model(imgs.cuda())
-            f = outputs.data.cpu()
-            ff = ff + f
+            n, c, h, w = imgs.size()
+            if count == 0:
+                feature_length = model(imgs.cuda() if cuda_is_available else imgs).size()[1]
+            ff = torch.Tensor(n, feature_length).zero_()
+            for i in range(2):
+                if i == 1:
+                    imgs = flip_img(imgs.cpu())
+                outputs = model(imgs.cuda())
+                f = outputs.data.cpu()
+                ff = ff + f
 
-        ff = torch.mean(ff, dim=0, keepdim=True)
-        if is_normlize:
-            ff = normalize(ff)
+            ff = torch.mean(ff, dim=0, keepdim=True)
+            if is_normlize:
+                ff = normalize(ff)
 
-        features = torch.cat((features, ff), 0)
+            features = torch.cat((features, ff), 0)
 
-        count += 1
-        if vis:
-            print("已经提取了{}个人".format(count))
-        pids.append(pid)
-        cams.append(cam)
-    model.train()
-    return features, pids, cams
+            count += 1
+            if vis:
+                print("已经提取了{}个人".format(count))
+            pids.append(pid)
+            cams.append(cam)
+        model.train()
+        return features, pids, cams
 
 
 def normalize(x, axis=-1):
