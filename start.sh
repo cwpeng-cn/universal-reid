@@ -1,4 +1,3 @@
 mkdir storage
 rm -r ../sample_data
-cp -r /content/My\ Drive/Colab/ReID\ works/CVPR\ fintuning/net_149.pth ./storage
-
+cp -r /content/drive/MyDrive/Colab/ReID\ works/CVPR\ fintuning/net_149.pth ./storage
