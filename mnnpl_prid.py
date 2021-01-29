@@ -37,4 +37,4 @@ with open("pseudo_label_prid.txt", "w") as fw:
         index = torch.argmax(score1[i])
         index2 = torch.argmax(score2[index])
         if i == index2:
-            fw.write(cam1_persons[i] + "\t" + cam2_persons[index.item()]+"\n")
+            fw.write('cam_a'+cam1_persons[i] + "\t" + "cam_b"+cam2_persons[index.item()]+"\n")
