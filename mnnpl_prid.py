@@ -32,7 +32,7 @@ score2 = torch.matmul(cam2_feature, cam1_feature.T)
 cam1_persons = cam1.data['cam1_persons']
 cam2_persons = cam2.data['cam2_persons']
 
-with open("pesudo_label_prid.txt", "w") as fw:
+with open("pseudo_label_prid.txt", "w") as fw:
     for i in range(178):
         index = torch.argmax(score1[i])
         index2 = torch.argmax(score2[index])
