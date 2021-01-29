@@ -74,6 +74,7 @@ class UNSUPPRID2011(Dataset):
 
     def process_dir(self, dirnames, cam1=True, cam2=True):
         tracklets = []
+        print(dirnames)
         dirname2pid = {dirname: i for i, dirname in enumerate(dirnames)}
 
         for dirname in dirnames:
