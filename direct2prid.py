@@ -31,4 +31,4 @@ map, cmc = market_evaluate.evaluate(query_feature, np.array(query_id), np.array(
                                     np.array(gallery_id), np.array(gallery_camera), vis=False)
 print("训练结果: map:{},rank-1:{},rank-5:{},rank-10:{}".format(map, cmc[0], cmc[4], cmc[9]))
 
-##训练结果: map:0.8773935619013782,rank-1:0.8539325842696629,rank-5:0.9550561797752809,rank-10:0.9662921348314607
+# 训练结果: map:0.8890823970037453,rank-1:0.8651685393258427,rank-5:0.9662921348314607,rank-10:0.9775280898876404

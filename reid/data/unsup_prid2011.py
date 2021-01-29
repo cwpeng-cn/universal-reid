@@ -56,12 +56,8 @@ class UNSUPPRID2011(Dataset):
 
         cam1 = self.process_dir(train_dirs + test_dirs, cam1=True, cam2=False)
         cam2 = self.process_dir(train_dirs + test_dirs, cam1=False, cam2=True)
-        train = {'cam1': cam1, 'cam2': cam2}
 
-        query = self.process_dir(test_dirs, cam1=True, cam2=False)
-        gallery = self.process_dir(test_dirs, cam1=False, cam2=True)
-
-        self.data = {"train": train, "query": query, "gallery": gallery, 'ids': train_dirs + test_dirs}
+        self.data = {'cam1': cam1, 'cam2': cam2, 'ids': train_dirs + test_dirs}
 
     def __getitem__(self, index):
         data = self.data[self.mode]
