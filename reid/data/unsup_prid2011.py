@@ -54,10 +54,10 @@ class UNSUPPRID2011(Dataset):
         split = splits[split_id]
         train_dirs, test_dirs = split['train'], split['test']
 
-        print(train_dirs + test_dirs)
+        combine_dir = train_dirs + test_dirs
 
-        cam1 = self.process_dir(train_dirs + test_dirs, cam1=True, cam2=False)
-        cam2 = self.process_dir(train_dirs + test_dirs, cam1=False, cam2=True)
+        cam1 = self.process_dir(combine_dir, cam1=True, cam2=False)
+        cam2 = self.process_dir(combine_dir, cam1=False, cam2=True)
 
         self.data = {'cam1': cam1, 'cam2': cam2, 'ids': train_dirs + test_dirs}
 
@@ -75,6 +75,7 @@ class UNSUPPRID2011(Dataset):
         return len(self.data[self.mode])
 
     def process_dir(self, dirnames, cam1=True, cam2=True):
+        print(dirnames)
         tracklets = []
         dirname2pid = {dirname: i for i, dirname in enumerate(dirnames)}
 
