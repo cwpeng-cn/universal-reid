@@ -59,7 +59,7 @@ class UNSUPPRID2011(Dataset):
         cam1 = self.process_dir(combine_dir, cam1=True, cam2=False)
         cam2 = self.process_dir(combine_dir, cam1=False, cam2=True)
 
-        self.data = {'cam1': cam1, 'cam2': cam2, 'ids': train_dirs + test_dirs}
+        self.data = {'cam1': cam1, 'cam2': cam2, 'cam1_persons': train_dirs, 'cam2_persons': test_dirs}
 
     def __getitem__(self, index):
         data = self.data[self.mode]
