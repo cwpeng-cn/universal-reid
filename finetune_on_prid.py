@@ -398,6 +398,12 @@ best_map = -1
 best_map_epoch = 0
 best_rank1 = -1
 best_rank1_epoch = 0
+print("测试直接迁移结果")
+query_feature, query_id, query_camera = FO.extract_cnn_feature(net, loader=query_loader, vis=False)
+gallery_feature, gallery_id, gallery_camera = FO.extract_cnn_feature(net, loader=gallery_loader, vis=False)
+map, cmc = market_evaluate.evaluate(query_feature, np.array(query_id), np.array(query_camera), gallery_feature,
+                                    np.array(gallery_id), np.array(gallery_camera), vis=False)
+print("直接迁移结果: rank-1:{},rank-5:{},rank-10:{},rank-20:{}".format(cmc[0], cmc[4], cmc[9], cmc[19]))
 print("开始训练>>>")
 for epoch in range(40):
     scheduler.step()
@@ -417,7 +423,8 @@ for epoch in range(40):
         gallery_feature, gallery_id, gallery_camera = FO.extract_cnn_feature(net, loader=gallery_loader, vis=False)
         map, cmc = market_evaluate.evaluate(query_feature, np.array(query_id), np.array(query_camera), gallery_feature,
                                             np.array(gallery_id), np.array(gallery_camera), vis=False)
-        print("第{}轮训练结果: map:{},rank-1:{},rank-5:{},rank-10:{}".format(epoch + 1, map, cmc[0], cmc[4], cmc[9]))
+        print("第{}轮训练结果: rank-1:{},rank-5:{},rank-10:{},rank-20:{}".format(epoch + 1, cmc[0], cmc[4], cmc[9],
+                                                                           cmc[19]))
         if map > best_map:
             best_map = map
             best_map_epoch = epoch

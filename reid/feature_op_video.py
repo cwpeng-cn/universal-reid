@@ -18,7 +18,7 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
         cuda_is_available = torch.cuda.is_available
         model.eval()
 
-        features = torch.Tensor()
+        features = torch.Tensor().cuda()
         count = 0
         feature_length = 0
         pids, cams = [], []
@@ -29,12 +29,12 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
             n, c, h, w = imgs.size()
             if count == 0:
                 feature_length = model(imgs.cuda() if cuda_is_available else imgs).size()[1]
-            ff = torch.Tensor(n, feature_length).zero_()
+            ff = torch.Tensor(n, feature_length).zero_().cuda()
             for i in range(2):
                 if i == 1:
                     imgs = flip_img(imgs.cpu())
                 outputs = model(imgs.cuda())
-                f = outputs.data.cpu()
+                f = outputs.data
                 ff = ff + f
 
             ff = torch.mean(ff, dim=0, keepdim=True)
@@ -49,7 +49,7 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
             pids.append(pid)
             cams.append(cam)
         model.train()
-        return features, pids, cams
+        return features.cpu(), pids, cams
 
 
 def normalize(x, axis=-1):
