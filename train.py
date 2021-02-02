@@ -41,7 +41,7 @@ for epoch in range(EPOCH):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        if step % 5 == 0:
+        if step % 10 == 0:
             print(loss.item())
     if epoch % 2 == 0:
         print("第{}轮效果评估开始>>>".format(epoch + 1))
