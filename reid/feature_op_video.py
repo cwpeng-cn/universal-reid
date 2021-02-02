@@ -52,9 +52,10 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
         return features.cpu(), pids, cams
 
 
-def extract_cnn_feature_combined(model, loader=None, transforms=None, image_path=None, vis=True, is_normlize=True):
+def extract_cnn_feature_combined(model, loader=None, transforms=None, image_path=None, vis=True, is_normlize=True,
+                                 mode="query"):
     """
-    此函数目前只针对prid数据集
+    此函数目前只针对prid数据集,混合模型
     :param model:
     :param loader:
     :param transforms: loader为None时必须指定
@@ -62,39 +63,30 @@ def extract_cnn_feature_combined(model, loader=None, transforms=None, image_path
     :return: 返回特征或特征列表
     """
     with torch.no_grad():
-        cuda_is_available = torch.cuda.is_available
         model.eval()
+        model.gait_net.eval()
 
         features = torch.Tensor().cuda()
         count = 0
         feature_length = 0
         pids, cams = [], []
-        for data in loader:
-            imgs, pid, cam = data
-            imgs = imgs[0]
 
-            n, c, h, w = imgs.size()
-            if count == 0:
-                feature_length = model(imgs.cuda() if cuda_is_available else imgs).size()[1]
-            ff = torch.Tensor(n, feature_length).zero_().cuda()
-            for i in range(2):
-                if i == 1:
-                    imgs = flip_img(imgs.cpu())
-                outputs = model(imgs.cuda())
-                f = outputs.data
-                ff = ff + f
+        for pid, data in enumerate(loader):
+            cam = 0 if mode == "query" else 0
+            rgb_seqs, gait_seqs, ids = data
 
-            ff = torch.mean(ff, dim=0, keepdim=True)
+            f = model(rgb_seqs.cuda(), gait_seqs.cuda()).size()[1]
             if is_normlize:
-                ff = normalize(ff)
+                f = normalize(f)
 
-            features = torch.cat((features, ff), 0)
+            features = torch.cat((features, f), 0)
 
             count += 1
             if vis:
                 print("已经提取了{}个人".format(count))
             pids.append(pid)
             cams.append(cam)
+
         model.train()
         return features.cpu(), pids, cams
 

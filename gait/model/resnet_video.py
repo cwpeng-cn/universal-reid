@@ -375,15 +375,6 @@ class ResNet_ATT(nn.Module):
             v = torch.mean(v, 1)
         return v
 
-        # y = self.classifier(v)
-
-        # if self.loss == 'softmax':
-        #     return y, v
-        # elif self.loss == 'triplet':
-        #     return y, v
-        # else:
-        #     raise KeyError("Unsupported loss: {}".format(self.loss))
-
 
 def init_pretrained_weights(model, model_url):
     """Initializes model with pretrained weights.

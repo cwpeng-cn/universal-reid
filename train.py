@@ -43,3 +43,12 @@ for epoch in range(EPOCH):
         optimizer.step()
         print(loss.item())
     if epoch % 2 == 0:
+        print("第{}轮效果评估开始>>>".format(epoch + 1))
+        query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=False,
+                                                                                mode="query")
+        gallery_feature, gallery_id, gallery_camera = FO.extract_cnn_feature_combined(net, loader=gallery_loader,
+                                                                                      vis=False, mode="gallery")
+        map, cmc = market_evaluate.evaluate(query_feature, np.array(query_id), np.array(query_camera), gallery_feature,
+                                            np.array(gallery_id), np.array(gallery_camera), vis=False)
+        print("第{}轮训练结果: rank-1:{},rank-5:{},rank-10:{},rank-20:{}".format(epoch + 1, cmc[0], cmc[4], cmc[9],
+                                                                           cmc[19]))

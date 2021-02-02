@@ -22,6 +22,7 @@ class RGNet(nn.Module):
         n, s, c, h2, w2 = gait_seqs.shape
         gait_seqs = gait_seqs.view(n * s, c, h2, w2)
         with torch.no_grad():
+            self.rgb_net.eval()
             rgb_features = torch.mean(self.rgb_net(rgb_seqs).view(n, s, -1), 1)
         gait_features = self.gait_net(gait_seqs)
         combined = torch.cat([rgb_features, gait_features], 1)
