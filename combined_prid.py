@@ -38,13 +38,12 @@ class COM_PRID2011(Dataset):
         gait_imgs_data = torch.tensor([])
 
         for _ in rgb_img_paths:
-            img_data = Image.open(_)
+            img_data = Image.open(_).convert('RGB')
             img = torch.unsqueeze(self.rgb_transform(img_data), 0)
             rgb_imgs_data = torch.cat((rgb_imgs_data, img), 0)
 
         for _ in gait_img_paths:
-            img_data = Image.open(_)
-            print(img_data.size)
+            img_data = Image.open(_).convert('RGB')
             img = torch.unsqueeze(self.gait_transform(img_data), 0)
             gait_imgs_data = torch.cat((gait_imgs_data, img), 0)
 
