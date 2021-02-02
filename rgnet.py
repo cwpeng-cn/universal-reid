@@ -81,7 +81,7 @@ class RGNet(nn.Module):
             if m.bias is not None:
                 nn.init.constant_(m.bias, 0)
 
-    def normalize(x, axis=-1):
+    def normalize(self, x, axis=-1):
         """Normalizing to unit length along the specified dimension.
         Args:
           x: pytorch Variable
