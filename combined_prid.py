@@ -44,7 +44,7 @@ class COM_PRID2011(Dataset):
 
         for _ in gait_img_paths:
             img_data = Image.open(_)
-            print(img_data.shape)
+            print(img_data.size())
             img = torch.unsqueeze(self.gait_transform(img_data), 0)
             gait_imgs_data = torch.cat((gait_imgs_data, img), 0)
 
