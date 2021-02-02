@@ -32,7 +32,7 @@ nn.init.normal_(classifier.weight, 0, 0.01)
 if classifier.bias is not None:
     nn.init.constant_(classifier.bias, 0)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(gait_net.parameters() + classifier.parameters())
+optimizer = optim.Adam(list(gait_net.parameters()) + list(classifier.parameters()))
 
 for epoch in range(EPOCH):
     for data in train_loader:
