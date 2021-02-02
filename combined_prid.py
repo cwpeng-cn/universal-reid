@@ -133,8 +133,8 @@ class COM_PRID2011(Dataset):
 
                 for img_name in os.listdir(gait_dataset_dir + "cam_b/" + person):
                     if img_name.endswith("png"):
-                        gallery_rgb_tracklet.append(rgb_dataset_dir + "cam_b/" + person + img_name)
-                        gallery_gait_tracklet.append(gait_dataset_dir + "cam_b/" + img_name)
+                        gallery_rgb_tracklet.append(rgb_dataset_dir + "cam_b/" + person + "/" + img_name)
+                        gallery_gait_tracklet.append(gait_dataset_dir + "cam_b/" + person + "/" + img_name)
                 query_tracklets.append({"gait": query_gait_tracklet, "rgb": query_rgb_tracklet})
                 gallery_tracklets.append({"gait": gallery_gait_tracklet, "rgb": gallery_rgb_tracklet})
             return query_tracklets, gallery_tracklets
