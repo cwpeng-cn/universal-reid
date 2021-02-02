@@ -24,8 +24,6 @@ class RGNet(nn.Module):
         with torch.no_grad():
             self.rgb_net.eval()
             rgb_features = torch.mean(self.rgb_net(rgb_seqs).view(n, s, -1), 1)
-            if not self.training:
-                return rgb_features
         gait_features = self.gait_net(gait_seqs)
         combined = torch.cat([self.normalize(rgb_features), self.normalize(gait_features)], 1)
         features = self.fc(combined)
