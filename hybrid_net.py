@@ -25,7 +25,7 @@ train_loader = DataLoader(train_dataset, batch_size=4, shuffle=False)
 
 net = PGSNet(num_classes=NUM_CLASS, num_features=1024)
 rgb_net = restore_network("./", 9, net).cuda().eval()
-gait_net = gaitnet(num_classes=NUM_CLASS, pretrained=True, seq_num=SEQ_NUM, droprate=0.1)
+gait_net = gaitnet(num_classes=NUM_CLASS, pretrained=True, seq_num=SEQ_NUM, droprate=0.1).cuda()
 
 for epoch in range(EPOCH):
     for data in train_loader:
