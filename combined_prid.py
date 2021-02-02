@@ -4,6 +4,7 @@ from PIL import Image
 import torch
 import os
 import numpy as np
+from torchvision import transforms
 
 txt_name = "pseudo_label_prid.txt"
 dataset_path = "../../datasets/{}/prid_2011/multi_shot/"
@@ -13,35 +14,40 @@ rgb_dataset_dir = dataset_path.format("prid2011")
 
 class COM_PRID2011(Dataset):
 
-    def __init__(self, transform=None, seq_num=15):
+    def __init__(self, seq_num=15):
         self.tracklets = self.load(txt_name)
-        self.transform = transform
+        self.rgb_transform = transforms.Compose([
+            transforms.Resize((384, 128)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
+        self.gait_transform = transforms.Compose([
+            transforms.Resize((192, 64)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
         self.seq_num = seq_num
 
     def __getitem__(self, index):
-        rgb_cam_a_imgs = np.random.choice(self.tracklets['rgb']['cam_a'][index], size=self.seq_num, replace=True)
-        rgb_cam_b_imgs = np.random.choice(self.tracklets['rgb']['cam_b'][index], size=self.seq_num, replace=True)
-        gait_cam_a_imgs = np.random.choice(self.tracklets['gait']['cam_a'][index], size=self.seq_num, replace=True)
-        gait_cam_b_imgs = np.random.choice(self.tracklets['gait']['cam_b'][index], size=self.seq_num, replace=True)
+        cam = "cam_a" if np.random.rand() >= 0.5 else 'cam_b'
 
-        rgb_cam_a_imgs_data=torch.tensor([])
-        for path in rgb_cam_a_imgs:
-            img_data = Image.open(path)
-            img = torch.unsqueeze(self.transform(img_data), 0)
-            rgb_cam_a_imgs_data = torch.cat((rgb_cam_a_imgs_data, img), 0)
-        for
+        rgb_img_paths = np.random.choice(self.tracklets['rgb'][cam][index], size=self.seq_num, replace=True)
+        gait_img_paths = np.random.choice(self.tracklets['gait'][cam][index], size=self.seq_num, replace=True)
 
+        rgb_imgs_data = torch.tensor([])
+        gait_imgs_data = torch.tensor([])
 
+        for _ in rgb_img_paths:
+            img_data = Image.open(_)
+            img = torch.unsqueeze(self.rgb_transform(img_data), 0)
+            rgb_imgs_data = torch.cat((rgb_imgs_data, img), 0)
 
+        for _ in gait_img_paths:
+            img_data = Image.open(_)
+            img = torch.unsqueeze(self.gait_transform(img_data), 0)
+            gait_imgs_data = torch.cat((gait_imgs_data, img), 0)
 
-
-        for path in sorted(person_tracklet)[:64]:
-            img_data = Image.open(path)
-            img = torch.unsqueeze(self.transform(img_data), 0)
-            imgs = torch.cat((imgs, img), 0)
-
-        np.random.choice(self.tracklets['gait']['cam_a'][index], size=self.seq_num, replace=True)
-        np.random.choice(self.tracklets['rgb']['cam_b'])
+        return rgb_imgs_data, gait_imgs_data, index
 
     def __len__(self):
         return len(self.tracklets["rgb"]["cam_a"])
