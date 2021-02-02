@@ -89,9 +89,9 @@ class COM_PRID2011(Dataset):
         if self.mode == "train":
             return len(self.train_tracklets["rgb"]["cam_a"])
         if self.mode == "query":
-            return len(self.query_tracklets["rgb"])
+            return len(self.query_tracklets)
         if self.mode == "gallery":
-            return len(self.gallery_tracklets['gait'])
+            return len(self.gallery_tracklets)
 
     def load_trainset(self, txt_name):
         tracklets = {"rgb": {'cam_a': [], 'cam_b': []}, "gait": {'cam_a': [], 'cam_b': []}}

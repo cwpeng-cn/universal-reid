@@ -34,14 +34,15 @@ optimizer = optim.Adam(list(net.gait_net.parameters()) + list(net.classifier.par
                        lr=0.001)
 
 for epoch in range(EPOCH):
-    for data in train_loader:
+    for step, data in enumerate(train_loader):
         rgb_seqs, gait_seqs, ids = data
         output = net(rgb_seqs.cuda(), gait_seqs.cuda())
         loss = criterion(output, ids.cuda())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        print(loss.item())
+        if step % 5 == 0:
+            print(loss.item())
     if epoch % 2 == 0:
         print("第{}轮效果评估开始>>>".format(epoch + 1))
         query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=False,
