@@ -71,7 +71,7 @@ def extract_cnn_feature_combined(model, loader=None, transforms=None, image_path
         pids, cams = [], []
 
         for pid, data in enumerate(loader):
-            cam = 0 if mode == "query" else 0
+            cam = 0 if mode == "query" else 1
             rgb_seqs, gait_seqs, ids = data
 
             f = model(rgb_seqs.cuda(), gait_seqs.cuda())
