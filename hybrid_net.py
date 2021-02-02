@@ -39,4 +39,5 @@ for epoch in range(EPOCH):
             rgb_features = torch.mean(rgb_net(rgb_seqs).view(n, s, -1), 1)
 
         gait_features = gait_net(rgb_seqs)
-        print(gait_features.shape, rgb_features.shape)
+        features = torch.cat([rgb_features, gait_features], 1)
+        print(features.shape)
