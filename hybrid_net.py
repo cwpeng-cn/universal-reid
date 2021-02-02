@@ -51,6 +51,6 @@ for epoch in range(EPOCH):
         output = classifier(features)
         loss = criterion(output, ids)
         optimizer.zero_grad()
-        loss.backwards()
+        loss.backward()
         optimizer.step()
         print(loss.item())
