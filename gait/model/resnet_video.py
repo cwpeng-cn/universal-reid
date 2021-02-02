@@ -370,19 +370,19 @@ class ResNet_ATT(nn.Module):
         if not self.training:
             v = v.unsqueeze(0)
             v = torch.mean(v, 1)
-            return v
         else:
             v = v.view(v.size(0) // self.seq_num, self.seq_num, -1)
             v = torch.mean(v, 1)
+        return v
 
-        y = self.classifier(v)
+        # y = self.classifier(v)
 
-        if self.loss == 'softmax':
-            return y
-        elif self.loss == 'triplet':
-            return y, v
-        else:
-            raise KeyError("Unsupported loss: {}".format(self.loss))
+        # if self.loss == 'softmax':
+        #     return y, v
+        # elif self.loss == 'triplet':
+        #     return y, v
+        # else:
+        #     raise KeyError("Unsupported loss: {}".format(self.loss))
 
 
 def init_pretrained_weights(model, model_url):
