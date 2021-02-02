@@ -41,6 +41,7 @@ for epoch in range(EPOCH):
         rgb_seqs = rgb_seqs.view(n * s, c, h1, w1).cuda()
         n, s, c, h2, w2 = gait_seqs.shape
         gait_seqs = gait_seqs.view(n * s, c, h2, w2).cuda()
+        ids = ids.cuda()
 
         with torch.no_grad():
             rgb_features = torch.mean(rgb_net(rgb_seqs).view(n, s, -1), 1)
