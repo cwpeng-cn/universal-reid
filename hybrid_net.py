@@ -15,6 +15,7 @@ from torch.nn import init
 from reid.data.prid2011 import PRID2011
 import reid.feature_op_video as FO
 from gait.model.resnet_video import resnet50 as gaitnet
+from torch import optim
 
 EPOCH = 30
 SEQ_NUM = 10
@@ -26,6 +27,12 @@ train_loader = DataLoader(train_dataset, batch_size=4, shuffle=False)
 net = PGSNet(num_classes=NUM_CLASS, num_features=1024)
 rgb_net = restore_network("./", 9, net).cuda().eval()
 gait_net = gaitnet(num_classes=NUM_CLASS, pretrained=True, seq_num=SEQ_NUM, droprate=0.1).cuda()
+classifier = nn.Linear(4096, NUM_CLASS).cuda()
+nn.init.normal_(classifier.weight, 0, 0.01)
+if classifier.bias is not None:
+    nn.init.constant_(classifier.bias, 0)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(gait_net.parameters() + classifier.parameters())
 
 for epoch in range(EPOCH):
     for data in train_loader:
@@ -40,4 +47,9 @@ for epoch in range(EPOCH):
 
         gait_features = gait_net(rgb_seqs)
         features = torch.cat([rgb_features, gait_features], 1)
-        print(features.shape)
+        output = classifier(features)
+        loss = criterion(output, ids)
+        optimizer.zero_grad()
+        loss.backwards()
+        optimizer.step()
+        print(loss.item())
