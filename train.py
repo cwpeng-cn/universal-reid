@@ -28,7 +28,7 @@ query_loader = DataLoader(query_dataset, batch_size=1, shuffle=False)
 gallery_dataset = COM_PRID2011(mode="gallery")
 gallery_loader = DataLoader(gallery_dataset, batch_size=1, shuffle=False)
 
-net = RGNet(num_class=NUM_CLASS, seq_num=SEQ_NUM)
+net = RGNet(num_class=NUM_CLASS, seq_num=SEQ_NUM).cuda()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(list(net.gait_net.parameters()) + list(net.classifier.parameters()) + list(net.fc.parameters()))
 
