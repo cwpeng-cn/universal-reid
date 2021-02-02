@@ -34,8 +34,10 @@ optimizer = optim.Adam(list(net.gait_net.parameters()) + list(net.classifier.par
                        lr=0.001)
 
 print("测试直接迁移结果")
-query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=True)
-gallery_feature, gallery_id, gallery_camera = FO.extract_cnn_feature_combined(net, loader=gallery_loader, vis=True)
+query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=True,
+                                                                        mode="query")
+gallery_feature, gallery_id, gallery_camera = FO.extract_cnn_feature_combined(net, loader=gallery_loader, vis=True,
+                                                                              mode="gallery")
 map, cmc = market_evaluate.evaluate(query_feature, np.array(query_id), np.array(query_camera), gallery_feature,
                                     np.array(gallery_id), np.array(gallery_camera), vis=False)
 print("直接迁移结果: rank-1:{},rank-5:{},rank-10:{},rank-20:{}".format(cmc[0], cmc[4], cmc[9], cmc[19]))
