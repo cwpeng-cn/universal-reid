@@ -63,7 +63,7 @@ class PRID2011(Dataset):
         data = self.data[self.mode]
         person_tracklet, id_, cam = data[index]
         imgs = torch.tensor([])
-        for path in sorted(person_tracklet)[:64]:
+        for path in person_tracklet[:64]:
             img_data = Image.open(path)
             img = torch.unsqueeze(self.transform(img_data), 0)
             imgs = torch.cat((imgs, img), 0)

@@ -24,6 +24,16 @@ class COM_PRID2011(Dataset):
         gait_cam_a_imgs = np.random.choice(self.tracklets['gait']['cam_a'][index], size=self.seq_num, replace=True)
         gait_cam_b_imgs = np.random.choice(self.tracklets['gait']['cam_b'][index], size=self.seq_num, replace=True)
 
+        rgb_cam_a_imgs_data=torch.tensor([])
+        for path in rgb_cam_a_imgs:
+            img_data = Image.open(path)
+            img = torch.unsqueeze(self.transform(img_data), 0)
+            rgb_cam_a_imgs_data = torch.cat((rgb_cam_a_imgs_data, img), 0)
+        for
+
+
+
+
 
         for path in sorted(person_tracklet)[:64]:
             img_data = Image.open(path)
