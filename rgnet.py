@@ -25,7 +25,7 @@ class RGNet(nn.Module):
             self.rgb_net.eval()
             rgb_features = torch.mean(self.rgb_net(rgb_seqs).view(n, s, -1), 1)
         gait_features = self.gait_net(gait_seqs)
-        combined = torch.cat([rgb_features, gait_features], 1)
+        combined = torch.cat([self.normalize(rgb_features), self.normalize(gait_features)], 1)
         features = self.fc(combined)
         if not self.training:
             return features
@@ -80,3 +80,13 @@ class RGNet(nn.Module):
             nn.init.normal_(m.weight, 0, 0.01)
             if m.bias is not None:
                 nn.init.constant_(m.bias, 0)
+
+    def normalize(x, axis=-1):
+        """Normalizing to unit length along the specified dimension.
+        Args:
+          x: pytorch Variable
+        Returns:
+          x: pytorch Variable, same shape as input
+        """
+        x = 1. * x / (torch.norm(x, 2, axis, keepdim=True).expand_as(x) + 1e-12)
+        return x
