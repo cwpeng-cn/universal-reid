@@ -21,7 +21,7 @@ SEQ_NUM = 10
 NUM_CLASS = 144
 
 train_dataset = COM_PRID2011(seq_num=SEQ_NUM, mode="train")
-train_loader = DataLoader(train_dataset, batch_size=4, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 
 query_dataset = COM_PRID2011(mode="query")
 query_loader = DataLoader(query_dataset, batch_size=1, shuffle=False)
@@ -30,7 +30,8 @@ gallery_loader = DataLoader(gallery_dataset, batch_size=1, shuffle=False)
 
 net = RGNet(num_class=NUM_CLASS, seq_num=SEQ_NUM).cuda()
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(list(net.gait_net.parameters()) + list(net.classifier.parameters()) + list(net.fc.parameters()))
+optimizer = optim.Adam(list(net.gait_net.parameters()) + list(net.classifier.parameters()) + list(net.fc.parameters()),
+                       lr=0.001)
 
 for epoch in range(EPOCH):
     for data in train_loader:
@@ -41,3 +42,4 @@ for epoch in range(EPOCH):
         loss.backward()
         optimizer.step()
         print(loss.item())
+    if epoch % 2 == 0:

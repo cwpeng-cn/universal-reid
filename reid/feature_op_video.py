@@ -52,6 +52,53 @@ def extract_cnn_feature(model, loader=None, transforms=None, image_path=None, vi
         return features.cpu(), pids, cams
 
 
+def extract_cnn_feature_combined(model, loader=None, transforms=None, image_path=None, vis=True, is_normlize=True):
+    """
+    此函数目前只针对prid数据集
+    :param model:
+    :param loader:
+    :param transforms: loader为None时必须指定
+    :param image_path: loader为None时需要的图片地址
+    :return: 返回特征或特征列表
+    """
+    with torch.no_grad():
+        cuda_is_available = torch.cuda.is_available
+        model.eval()
+
+        features = torch.Tensor().cuda()
+        count = 0
+        feature_length = 0
+        pids, cams = [], []
+        for data in loader:
+            imgs, pid, cam = data
+            imgs = imgs[0]
+
+            n, c, h, w = imgs.size()
+            if count == 0:
+                feature_length = model(imgs.cuda() if cuda_is_available else imgs).size()[1]
+            ff = torch.Tensor(n, feature_length).zero_().cuda()
+            for i in range(2):
+                if i == 1:
+                    imgs = flip_img(imgs.cpu())
+                outputs = model(imgs.cuda())
+                f = outputs.data
+                ff = ff + f
+
+            ff = torch.mean(ff, dim=0, keepdim=True)
+            if is_normlize:
+                ff = normalize(ff)
+
+            features = torch.cat((features, ff), 0)
+
+            count += 1
+            if vis:
+                print("已经提取了{}个人".format(count))
+            pids.append(pid)
+            cams.append(cam)
+        model.train()
+        return features.cpu(), pids, cams
+
+
 def normalize(x, axis=-1):
     """Normalizing to unit length along the specified dimension.
     Args:
