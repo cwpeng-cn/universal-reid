@@ -15,11 +15,15 @@ from reid.data.prid2011 import PRID2011
 import reid.feature_op_video as FO
 from rgnet_new import RGNet
 from torch import optim
+from reid.utils.seed import set_seed
 
 EPOCH = 30
 SEQ_NUM = 10
 NUM_CLASS = 144
 LR = 0.001
+save_path = './storage'
+
+set_seed()
 
 train_dataset = COM_PRID2011(seq_num=SEQ_NUM, mode="train")
 train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
@@ -60,6 +64,7 @@ for epoch in range(EPOCH):
         if step % 10 == 0:
             print(loss.item())
     if epoch > 8 or epoch % 2 == 0:
+        save_network(save_path, net, epoch)
         print("第{}轮效果评估开始>>>".format(epoch + 1))
         query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=False,
                                                                                 mode="query")
