@@ -9,7 +9,7 @@ class RGNet(nn.Module):
         super(RGNet, self).__init__()
         self.seq_num = seq_num
         rgb_net = PGSNet(num_classes=num_class, num_features=1024)
-        self.rgb_net = restore_network("./", 9, rgb_net).eval()
+        self.rgb_net = restore_network("./", 5, rgb_net).eval()
         self.gait_net = gaitnet(num_classes=num_class, pretrained=True, seq_num=seq_num, droprate=0.1)
         self.fc = self._construct_fc_layer([1024], 4096, 0.1)
         self.classifier = nn.Linear(1024, num_class)
