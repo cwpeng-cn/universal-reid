@@ -59,7 +59,7 @@ for epoch in range(EPOCH):
         optimizer.step()
         if step % 10 == 0:
             print(loss.item())
-    if epoch % 2 == 0:
+    if epoch > 8 or epoch % 2 == 0:
         print("第{}轮效果评估开始>>>".format(epoch + 1))
         query_feature, query_id, query_camera = FO.extract_cnn_feature_combined(net, loader=query_loader, vis=False,
                                                                                 mode="query")
