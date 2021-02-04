@@ -390,7 +390,7 @@ triplet = TripletLoss(0.3)
 
 optimizer = make_optimizer(net)
 # scheduler = WarmupMultiStepLR(optimizer, (30, 55), 0.1, 1.0 / 3,500, "linear")
-scheduler = WarmupMultiStepLR(optimizer, (5, 10), 0.1, 1.0 / 3, 500, "linear")
+scheduler = WarmupMultiStepLR(optimizer, (5, 10), 0.12, 1.0 / 3, 500, "linear")
 net.train()
 
 step = 0
